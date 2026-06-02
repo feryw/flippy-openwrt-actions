@@ -240,7 +240,7 @@ jobs:
           WHOAMI: ${{ inputs.builder_name }}
 
       - name: Upload OpenWrt Firmware to Release
-        uses: ophub/upload-to-releases@main
+        uses: feryw/upload-to-releases@feryw-patch-1
         if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           tag: ${{ env.build_tag }}
