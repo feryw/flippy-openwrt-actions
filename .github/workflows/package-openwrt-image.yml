@@ -72,11 +72,12 @@ on:
       kernel_repo:
         description: "Set the kernel repository"
         required: false
-        default: "ophub/kernel"
+        default: "feryw/armkernel"
         type: choice
         options:
           - breakingbadboy/OpenWrt
           - ophub/kernel
+          - feryw/armkernel
       openwrt_kernel:
         description: "Select kernel version"
         required: false
@@ -114,15 +115,15 @@ on:
       builder_name:
         description: "Set OpenWrt builder signature."
         required: false
-        default: "ophub"
+        default: "wyref"
         type: choice
         options:
           - ophub
           - angel
-          - yourname
+          - wyref
 
 env:
-  TZ: Etc/UTC
+  TZ: Asia/Jakarta
 
 jobs:
   build:
@@ -152,7 +153,7 @@ jobs:
           sudo -E apt-get clean
           sudo sed -i '/NVM_DIR/d;/skel/d' /root/{.bashrc,.profile}
           sudo rm -rf ~/{.cargo,.dotnet,.rustup}
-          sudo -E timedatectl set-timezone "${TZ:-Etc/UTC}"
+          sudo -E timedatectl set-timezone "${TZ:-Asia/Jakarta}"
           sudo -E ntpdate ntp.ubuntu.com 0.pool.ntp.org || true
           sudo -E timedatectl set-ntp true
           date -u
@@ -193,7 +194,7 @@ jobs:
           latest_version=$(curl -s \
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              https://api.github.com/repos/ophub/flippy-openwrt-actions/releases?per_page=20 | \
+              https://api.github.com/repos/feryw/flippy-openwrt-actions/releases?per_page=20 | \
               jq -r --arg RTK "OpenWrt_armv8_rootfs" \
               --arg BOARD "-rootfs.tar.gz" \
               '[.[] | select(.tag_name | contains($RTK))] |
@@ -225,7 +226,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Package OpenWrt Firmware
-        uses: ophub/flippy-openwrt-actions@main
+        uses: feryw/flippy-openwrt-actions@feryw-patch-1
         if: ${{ steps.download.outputs.status == 'success' && !cancelled() }}
         env:
           OPENWRT_ARMSR: opt/download/*rootfs.tar.gz
@@ -260,6 +261,6 @@ jobs:
             - Login to OpenWrt → System → Amlogic Service → Install OpenWrt
             ### OpenWrt source code
             - [coolsnowwolf/lede](https://github.com/coolsnowwolf/lede)
-            - The OpenWrt [rootfs and kernel](https://github.com/ophub/flippy-openwrt-actions/releases/tag/OpenWrt_armv8_rootfs) files are both shared by [flippy](https://github.com/unifreq/openwrt_packit).
+            - The OpenWrt [rootfs and kernel](https://github.com/feryw/flippy-openwrt-actions/releases/tag/OpenWrt_armv8_rootfs) files are both shared by [flippy](https://github.com/unifreq/openwrt_packit).
             ### OpenWrt Image Verification
             - sha256sum
