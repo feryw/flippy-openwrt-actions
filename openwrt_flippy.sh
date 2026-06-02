@@ -265,7 +265,7 @@ init_var() {
             KERNEL_TAGS_TMP+=("rk35xx")
         else
             # Use stable kernel by default; use flippy kernel when using the ophub repository
-            if [[ "${KERNEL_REPO_URL}" == "ophub/kernel" ]]; then
+            if [[ "${KERNEL_REPO_URL}" == "feryw/armkernel" ]]; then
                 KERNEL_TAGS_TMP+=("flippy")
             else
                 KERNEL_TAGS_TMP+=("stable")
@@ -522,7 +522,7 @@ make_openwrt() {
                 build_kernel=(${RK35XX_KERNEL[@]})
                 vb="rk35xx"
             else
-                if [[ "${KERNEL_REPO_URL}" == "ophub/kernel" ]]; then
+                if [[ "${KERNEL_REPO_URL}" == "feryw/armkernel" ]]; then
                     build_kernel=(${FLIPPY_KERNEL[@]})
                     vb="flippy"
                 else
